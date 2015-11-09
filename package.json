@@ -1,0 +1,16 @@
+{
+  "name": "a4",
+  "version": "1.0.0",
+  "description": "a4",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Sandi Milicevic",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3",
+    "mongodb": "^2.0.48"
+  }
+}
