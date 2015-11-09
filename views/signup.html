@@ -1,31 +1,22 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
 	</head>
-	
 	<body>
-	
-	<form>
-		<label>Email:</label> <br>
-		<input type="text"></input> <br>
-		
-		<br>
-		
-		<label>Password:</label> <br>
-		<input type="text"></input> <br>
-		
-		<br>
-
-		<label>Confirm:</label> <br>
-		<input type="text"></input> <br>
-		
-		<br>
-		
-		<input type="submit"></input>
-	</form>
-	
-	<script>
-	</script>
-	
+		<form action="/addProfile" method="post">
+			<label>Email:</label> <br>
+			<input id="email" type="text" name="email"></input> <br>
+			
+			<label>Password:</label> <br>
+			<input id="password" type="text" name="password"></input> <br>
+			
+			<label>Confirm:</label> <br>
+			<input id="confirm" type="text" name="confirm"></input> <br>
+				
+			<input type="submit"></input>	
+		</form>
 	</body>
 </html>
