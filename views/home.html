@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	</head>
 	
 	<body>
 	
 	<button id="login">Log in</button>
-	<button id="signup">Sign up</button>
+	<button id="signup" onclick="getSignupPage()">Sign up</button>
 	
 	<script>
+	function getSignupPage() {
+		$.ajax({
+			method: "GET",
+			url: "/signup"
+		}).done(function (res) {
+			document.write(res);
+			console.log(res);
+		});
+	}
 	</script>
 	
 	</body>
