@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
+app.set('view engine', 'jade');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -35,8 +36,9 @@ app.post('/validateLogin', db.validateLogin, function(req, res) {
 });
 
 // account.html will be replaced by account.jade which will be rendered by the jade middleware
-app.get('/account', function(req, res, next) {
-	res.sendFile(path.join(__dirname + '/views/account.html'));
+app.get('/account', db.getAllProfiles, function(req, res, next) {
+	//res.sendFile(path.join(__dirname + '/views/account.html'));
+	res.render('account', {pageTitle: 'Account Page', usersObject: req.profiles});
 });
 
 app.listen(3000);

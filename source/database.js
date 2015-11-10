@@ -13,7 +13,7 @@ function addProfile(req, res, next) {
 						"password": req.body.password,
 						"description": "This is a generic description",
 						"image": null,
-						"display_name": req.body.password};
+						"display_name": req.body.email};
 						
 	MongoClient.connect(url, function(err, db) {
 		assert.equal(err, null);
@@ -54,5 +54,33 @@ function validateLogin(req, res, next) {
 	});
 }
 
+function getAllProfiles(req, res, next) {
+	
+	var profiles = [];
+	
+	MongoClient.connect(url, function(err, db) {
+		assert.equal(err, null);
+		var cursor = db.collection('profiles').find( );
+		cursor.each(function(err, profile) {
+			assert.equal(err, null);
+			if (profile != null) {
+				var stripedProfile = {};
+				
+				stripedProfile["email"] = profile.email;
+				stripedProfile["display_name"] = profile.display_name;
+				
+				profiles.push(stripedProfile);		
+			} else {
+				req.profiles = profiles;
+				db.close();
+				
+				next();
+			}
+		});
+	});
+}
+
+// exports
 module.exports.addProfile = addProfile;
 module.exports.validateLogin = validateLogin;
+module.exports.getAllProfiles = getAllProfiles;
