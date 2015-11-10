@@ -43,5 +43,9 @@ app.get('/viewprofile/:email', db.profileViewSetup, function(req, res) {
 	res.render('viewprofile', {pageTitle: 'View Profile', profile: req.viewableProfile});
 });
 
+app.get('/editprofile', function(req, res) {
+	res.render('editprofile');
+});
+
 app.listen(3000);
 console.log('Server listening on port 3000...');

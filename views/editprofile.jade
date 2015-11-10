@@ -1,0 +1,40 @@
+doctype html
+html
+	head
+		script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+	body
+		form(action='/updateProfile' method='put')
+			label Email
+			br
+			input(id='email' type='text' value='john@doe.com' name='email' readonly)
+			br
+			br
+			label Display Name
+			br
+			input(id='display_name' type='text' name='display_name')
+			br
+			br
+			label Description
+			br
+			textarea(id='description' type='text' name='description')
+			br
+			button(id='update' onclick='updateProfile()')
+			br
+		
+		form(action='/changePassword' method='put')
+			br
+			label Old Password
+			br
+			input(id='old_password' type='text' name='old_password')
+			br
+			label New Password
+			br
+			input(id='new_password' type='text' name='new_password')
+			br
+			label Confirm Password
+			br
+			input(id='confirm_password' type='text' name='confirm_password')
+			br
+			br
+			input(type='submit')
+
