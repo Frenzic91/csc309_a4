@@ -10,3 +10,13 @@ html
 					td= profile.email
 					td= profile.display_name
 		
+		script.
+			// 
+			$('tr').click(function() {			
+				var profileFields = $( this ).find('td')
+				var email = profileFields.eq(0).text()
+				var displayName = profileFields.eq(1).text()
+		
+				console.log("Email clicked: ", email)
+				console.log("Display name clicked: ", displayName)	
+			});
