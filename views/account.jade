@@ -11,12 +11,22 @@ html
 					td= profile.display_name
 		
 		script.
-			// 
-			$('tr').click(function() {			
+			// register callback to be executed on profile click
+			$('tr').click(function() {
+				// get email (database unique identifier)
 				var profileFields = $( this ).find('td')
 				var email = profileFields.eq(0).text()
-				var displayName = profileFields.eq(1).text()
 		
 				console.log("Email clicked: ", email)
-				console.log("Display name clicked: ", displayName)	
+
+				// get displayable profile data of the clicked profile
+				var requestURL = '/viewprofile' + '/' + email;
+				$.ajax({
+					method: 'GET',
+					url: requestURL,
+					success: function(response) {
+						window.location.replace(requestURL);
+					}
+				});
 			});
+			

@@ -22,6 +22,10 @@ app.get('/login', function(req, res) {
 	res.sendFile(path.join(__dirname + '/views/login.html'));
 });
 
+app.get('/account', db.getAllProfiles, function(req, res, next) {
+	res.render('account', {pageTitle: 'Account Page', usersObject: req.profiles});
+});
+
 app.post('/addProfile', [db.addProfile], function(req, res, next) {
 	res.redirect(302, '/');
 });
@@ -35,10 +39,8 @@ app.post('/validateLogin', db.validateLogin, function(req, res) {
 	}
 });
 
-// account.html will be replaced by account.jade which will be rendered by the jade middleware
-app.get('/account', db.getAllProfiles, function(req, res, next) {
-	//res.sendFile(path.join(__dirname + '/views/account.html'));
-	res.render('account', {pageTitle: 'Account Page', usersObject: req.profiles});
+app.get('/viewprofile/:email', db.profileViewSetup, function(req, res) {
+	res.render('viewprofile', {pageTitle: 'View Profile', profile: req.viewableProfile});
 });
 
 app.listen(3000);

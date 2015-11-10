@@ -3,6 +3,26 @@ var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var url = 'mongodb://localhost:27017/profiles_test';
 
+// helpers
+function countMatchedProfiles(cursor, db, next, req) {
+	cursor.each(function(err, profile) {
+		assert.equal(err, null);
+		if (profile != null) {
+			// duplicates ignored?
+			console.log("User login data matched");
+			// req.sessionid = profile.email;
+			// req.validated = true;
+			req.profileCount++;
+		} else {
+			// invalid login info, send user back to login page
+			// req.validated = false;
+			db.close();
+			next();
+		}
+	});	
+}
+
+// main functions
 function addProfile(req, res, next) {
 	
 	console.log(req.body.email);
@@ -36,21 +56,7 @@ function validateLogin(req, res, next) {
 	MongoClient.connect(url, function(err, db) {
 		assert.equal(err, null);
 		var cursor = db.collection('profiles').find( {"email": email, "password": password} );
-		cursor.each(function(err, profile) {
-			assert.equal(err, null);
-			if (profile != null) {
-				// duplicates ignored?
-				console.log("User login data matched");
-				// req.sessionid = profile.email;
-				// req.validated = true;
-				req.profileCount++;
-			} else {
-				// invalid login info, send user back to login page
-				// req.validated = false;
-				next();
-			}
-			db.close();
-			});	
+		countMatchedProfiles(cursor, db, next, req);
 	});
 }
 
@@ -80,7 +86,33 @@ function getAllProfiles(req, res, next) {
 	});
 }
 
+function profileViewSetup(req, res, next) {
+	
+	var viewableProfile = {};
+	var email = req.params.email;
+	
+	MongoClient.connect(url, function(err, db) {
+		assert.equal(err, null);
+		var cursor = db.collection('profiles').find( {"email": email} );
+		cursor.each(function(err, profile) {
+			assert.equal(err, null);
+			if (profile != null) {
+					
+				viewableProfile["email"] = profile.email;
+				viewableProfile["display_name"] = profile.display_name;
+				viewableProfile["description"] = profile.description;
+			} else {
+				req.viewableProfile = viewableProfile;
+				db.close();
+				
+				next();
+			}
+		});
+	});
+}
+
 // exports
 module.exports.addProfile = addProfile;
 module.exports.validateLogin = validateLogin;
 module.exports.getAllProfiles = getAllProfiles;
+module.exports.profileViewSetup = profileViewSetup;
