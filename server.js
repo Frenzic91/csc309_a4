@@ -11,17 +11,30 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname + '/views/home.html'));
-	//res.redirect('http://www.google.com')
 });
 
 app.get('/signup', function(req, res) {
 	res.sendFile(path.join(__dirname + '/views/signup.html'));
 });
 
-app.post('/addProfile', [db.addProfile], function(req, res, next) {
-	res.redirect(302, '/account');
+app.get('/login', function(req, res) {
+	res.sendFile(path.join(__dirname + '/views/login.html'));
 });
 
+app.post('/addProfile', [db.addProfile], function(req, res, next) {
+	res.redirect(302, '/');
+});
+
+app.post('/validateLogin', db.validateLogin, function(req, res) {
+	if (req.profileCount > 0) {
+		// user exists and validated, set sessionid and whatever else...
+		res.redirect('/account');
+	} else {
+		res.redirect('/login');
+	}
+});
+
+// account.html will be replaced by account.jade which will be rendered by the jade middleware
 app.get('/account', function(req, res, next) {
 	res.sendFile(path.join(__dirname + '/views/account.html'));
 });

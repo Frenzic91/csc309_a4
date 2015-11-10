@@ -6,12 +6,16 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
 	</head>
 	<body>
-		<button id="login">Log in</button>
+		<button id="login" onclick="getLoginPage()">Log in</button>
 		<button id="signup" onclick="getSignupPage()">Sign up</button>
 
 		<script>
 			function getSignupPage() {
-				window.location.replace('http://127.0.0.1:3000/signup');
+				window.location.replace('/signup');
+			}
+			
+			function getLoginPage() {
+				window.location.replace('/login');
 			}
 		</script>
 	</body>
