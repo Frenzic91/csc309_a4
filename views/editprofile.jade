@@ -3,10 +3,10 @@ html
 	head
 		script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
 	body
-		form(action='/updateProfile' method='put')
+		form(action='/updateProfile' method='post')
 			label Email
 			br
-			input(id='email' type='text' value='john@doe.com' name='email' readonly)
+			input(id='email' type='text' value='lala@la.com' name='email' readonly)
 			br
 			br
 			label Display Name
@@ -18,10 +18,10 @@ html
 			br
 			textarea(id='description' type='text' name='description')
 			br
-			button(id='update' onclick='updateProfile()')
+			input(type='submit')
 			br
 		
-		form(action='/changePassword' method='put')
+		form(action='/changePassword' method='post')
 			br
 			label Old Password
 			br

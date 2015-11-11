@@ -8,14 +8,9 @@ function countMatchedProfiles(cursor, db, next, req) {
 	cursor.each(function(err, profile) {
 		assert.equal(err, null);
 		if (profile != null) {
-			// duplicates ignored?
 			console.log("User login data matched");
-			// req.sessionid = profile.email;
-			// req.validated = true;
 			req.profileCount++;
 		} else {
-			// invalid login info, send user back to login page
-			// req.validated = false;
 			db.close();
 			next();
 		}
@@ -29,22 +24,27 @@ function addProfile(req, res, next) {
 	console.log(req.body.password);
 	console.log(req.body.confirm);
 	
-	newProfile =	{"email": req.body.email,
-						"password": req.body.password,
-						"description": "This is a generic description",
-						"image": null,
-						"display_name": req.body.email};
-						
-	MongoClient.connect(url, function(err, db) {
-		assert.equal(err, null);
-		db.collection('profiles').insertOne(newProfile, function (err, result) {
+	if (req.body.password === req.body.confirm) {
+	
+		newProfile =	{"email": req.body.email,
+							"password": req.body.password,
+							"description": "This is a generic description",
+							"image": null,
+							"display_name": req.body.email};
+							
+		MongoClient.connect(url, function(err, db) {
 			assert.equal(err, null);
-			console.log("Added a new profile");
-			db.close();
-			next();
+			db.collection('profiles').insertOne(newProfile, function (err, result) {
+				assert.equal(err, null);
+				console.log("Added a new profile");
+				db.close();
+				next();
+			});
 		});
-	});
-};
+	} else {
+		next();
+	}
+}
 
 function validateLogin(req, res, next) {
 	
@@ -111,8 +111,56 @@ function profileViewSetup(req, res, next) {
 	});
 }
 
+function updateProfile(req, res, next) {
+	if (req.session.sessionid != undefined) {
+	
+		var display_name = req.body.display_name;
+		var description = req.body.description;
+		
+		MongoClient.connect(url, function(err, db) {
+			assert.equal(err, null);
+			db.collection('profiles').updateOne(
+				{"email": req.session.sessionid},
+				{$set: {"display_name" : display_name, "description": description}}, 
+				function(err, results) {
+					db.close();
+					console.log("Redirecting to editprofile");
+					res.redirect('/editprofile');
+				});
+		});
+	} else {
+		next();
+	}
+}
+
+function changePassword(req, res, next) {
+	if (req.session.sessionid != undefined &&
+		req.body.new_password === req.body.confirm_password) {
+	
+		var oldPass = req.body.old_password;
+		var newPass = req.body.new_password;
+		
+		MongoClient.connect(url, function(err, db) {
+			assert.equal(err, null);
+
+			db.collection('profiles').updateOne(
+				{"email": req.session.sessionid},
+				{$set: {"password": newPass}}, 
+				function(err, results) {
+					db.close();
+					console.log("Redirecting to editprofile");
+					res.redirect('/editprofile');
+				});
+		});
+	} else {
+		next();
+	}
+}
+
 // exports
 module.exports.addProfile = addProfile;
 module.exports.validateLogin = validateLogin;
 module.exports.getAllProfiles = getAllProfiles;
 module.exports.profileViewSetup = profileViewSetup;
+module.exports.updateProfile = updateProfile;
+module.exports.changePassword = changePassword;
